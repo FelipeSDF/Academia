@@ -16,7 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from acervo import urls as acervoViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+] + acervoViews.urls
