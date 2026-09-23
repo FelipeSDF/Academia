@@ -10,6 +10,20 @@ Projeto Django simples para controle de estoque de produtos. Feito para a prova 
   e os links de editar e excluir
 - **Dashboard** (`/dashboard`): resumo dos precos e graficos de produtos por categoria
 
+## Telas
+
+### Cadastro
+![Cadastro](docs/prints/cadastro.png)
+
+### Produtos
+![Produtos](docs/prints/produtos.png)
+
+### Editar
+![Editar](docs/prints/editar.png)
+
+### Dashboard
+![Dashboard](docs/prints/dashboard.png)
+
 ## Estrutura
 
 ```
