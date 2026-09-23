@@ -180,6 +180,12 @@
 
             <form method='get'>
                 <input type="text" name="busca" value="{{ busca|default_if_none:'' }}" placeholder="Pesquisar pelo nome">
+                <select name="tipo">
+                    <option value="">Todas as categorias</option>
+                    {% for valor, nome in tipos %}
+                        <option value="{{ valor }}" {% if valor == tipo %}selected{% endif %}>{{ nome }}</option>
+                    {% endfor %}
+                </select>
                 <button> pesquisar </button>
             </form>
 
@@ -201,7 +207,11 @@
 
                 {% empty %}
 
-                    <li class="vazio">Nenhum produto cadastrado.</li>
+                    {% if busca or tipo %}
+                        <li class="vazio">Nenhum produto encontrado com esse filtro.</li>
+                    {% else %}
+                        <li class="vazio">Nenhum produto cadastrado.</li>
+                    {% endif %}
 
                 {% endfor %}
             </ul>
