@@ -63,7 +63,12 @@ def dashboard(request):
 
     categorias = []
     for valor, nome in Produto.Tipo.choices:
-        categorias.append({'nome': nome, 'quantidade': produtos.filter(tipo=valor).count()})
+        da_categoria = produtos.filter(tipo=valor)
+        categorias.append({
+            'nome': nome,
+            'quantidade': da_categoria.count(),
+            'valor': da_categoria.aggregate(total=Sum('valor'))['total'] or 0,
+        })
 
     precos = produtos.aggregate(media=Avg('valor'), total=Sum('valor'))
 

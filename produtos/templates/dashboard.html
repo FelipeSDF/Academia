@@ -67,25 +67,6 @@
         .numero strong { display: block; font-size: 1.4rem; margin-top: 4px; color: #1f1f1f; }
         .numero small { color: #666; }
 
-        .categoria { margin-bottom: 12px; }
-
-        .categoria p {
-            display: flex;
-            justify-content: space-between;
-            margin: 0 0 4px;
-        }
-
-        .barra {
-            height: 10px;
-            background: #eee;
-            border-radius: 999px;
-        }
-
-        .barra div {
-            height: 100%;
-            background: #1565c0;
-            border-radius: 999px;
-        }
     </style>
 </head>
 <body>
@@ -131,17 +112,50 @@
 
         <section class="card">
             <h2>Produtos por categoria</h2>
+            <canvas id="grafico-quantidade"></canvas>
+        </section>
 
-            {% for categoria in categorias %}
-                <div class="categoria">
-                    <p><span>{{ categoria.nome }}</span> <strong>{{ categoria.quantidade }}</strong></p>
-                    <div class="barra">
-                        <div style="width: {% widthratio categoria.quantidade total 100 %}%"></div>
-                    </div>
-                </div>
-            {% endfor %}
+        <section class="card">
+            <h2>Soma dos valores por categoria</h2>
+            <canvas id="grafico-valor"></canvas>
         </section>
     </main>
+
+    {{ categorias|json_script:"categorias" }}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script>
+        const categorias = JSON.parse(document.getElementById('categorias').textContent);
+        const nomes = categorias.map(c => c.nome);
+
+        function grafico(id, valores, prefixo) {
+            new Chart(document.getElementById(id), {
+                type: 'bar',
+                data: {
+                    labels: nomes,
+                    datasets: [{
+                        data: valores,
+                        backgroundColor: '#1565c0',
+                        borderRadius: 4,
+                        maxBarThickness: 48,
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: item => prefixo + item.formattedValue } }
+                    },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true, ticks: { precision: 0 } }
+                    }
+                }
+            });
+        }
+
+        grafico('grafico-quantidade', categorias.map(c => c.quantidade), '');
+        grafico('grafico-valor', categorias.map(c => c.valor), 'R$ ');
+    </script>
 
 </body>
 </html>
