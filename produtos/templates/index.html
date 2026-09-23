@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academia</title>
+    <title>Estoque</title>
     <style>
         * { box-sizing: border-box; }
 
@@ -68,8 +68,8 @@
         form select:focus,
         form textarea:focus {
             outline: none;
-            border-color: #c62828;
-            box-shadow: 0 0 0 3px rgba(198, 40, 40, .2);
+            border-color: #1565c0;
+            box-shadow: 0 0 0 3px rgba(21, 101, 192, .2);
         }
 
         form .errorlist {
@@ -87,29 +87,29 @@
             padding: 12px;
             border: none;
             border-radius: 8px;
-            background: #c62828;
+            background: #1565c0;
             color: #fff;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
         }
 
-        button:hover { background: #8e0000; }
+        button:hover { background: #0d3c78; }
 
-        .pesos {
+        .produtos {
             list-style: none;
             margin: 0;
             padding: 0;
         }
 
-        .pesos li {
+        .produtos li {
             padding: 12px 8px;
             border-bottom: 1px solid #eee;
         }
 
-        .pesos li:last-child { border-bottom: none; }
+        .produtos li:last-child { border-bottom: none; }
 
-        .peso {
+        .produto {
             display: flex;
             gap: 16px;
             align-items: center;
@@ -120,7 +120,7 @@
             width: 56px;
             height: 72px;
             border-radius: 4px 10px 10px 4px;
-            background: linear-gradient(135deg, #a0714f, #8e0000);
+            background: linear-gradient(135deg, #5b8dd0, #0d3c78);
             border-left: 6px solid #111111;
             display: flex;
             align-items: center;
@@ -142,8 +142,8 @@
         }
 
         .tag {
-            background: #ffe0e0;
-            color: #8e0000;
+            background: #e3edfa;
+            color: #0d3c78;
             padding: 2px 10px;
             border-radius: 999px;
         }
@@ -156,13 +156,13 @@
 <body>
 
     <header>
-        <h1>🏋️ Academia</h1>
-        <p>Cadastro dos pesos</p>
+        <h1>📦 Estoque</h1>
+        <p>Cadastro dos produtos</p>
     </header>
 
     <main>
         <section class="card">
-            <h2>Novo peso</h2>
+            <h2>Novo produto</h2>
 
             <form method='post'>
 
@@ -176,32 +176,32 @@
         </section>
 
         <section class="card">
-            <h2>Pesos cadastrados</h2>
+            <h2>Produtos cadastrados</h2>
 
             <form method='get'>
                 <input type="text" name="busca" value="{{ busca|default_if_none:'' }}" placeholder="Pesquisar pelo nome">
                 <button> pesquisar </button>
             </form>
 
-            <ul class="pesos">
-                {% for peso in pesos %}
+            <ul class="produtos">
+                {% for produto in produtos %}
 
-                    <li class="peso">
-                        <div class="capa">🏋️</div>
+                    <li class="produto">
+                        <div class="capa">📦</div>
                         <div class="info">
-                            <h3>{{ peso.nome }}</h3>
-                            <p class="marca">🏭 {{ peso.marca }}</p>
+                            <h3>{{ produto.nome }}</h3>
+                            <p class="marca">🏭 {{ produto.marca }}</p>
                             <div class="detalhes">
-                                <span class="tag">🏷️ {{ peso.get_tipo_display }}</span>
-                                <span>📅 {{ peso.date|date:"d/m/Y" }}</span>
-                                <span class="preco">💰 R$ {{ peso.valor|floatformat:2 }}</span>
+                                <span class="tag">🏷️ {{ produto.get_tipo_display }}</span>
+                                <span>📅 {{ produto.date|date:"d/m/Y" }}</span>
+                                <span class="preco">💰 R$ {{ produto.valor|floatformat:2 }}</span>
                             </div>
                         </div>
                     </li>
 
                 {% empty %}
 
-                    <li class="vazio">Nenhum peso cadastrado.</li>
+                    <li class="vazio">Nenhum produto cadastrado.</li>
 
                 {% endfor %}
             </ul>
