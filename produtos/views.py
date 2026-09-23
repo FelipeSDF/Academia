@@ -32,11 +32,19 @@ def produtos(request):
     if tipo:
         filtro &= Q(tipo=tipo)
 
+    repor_itens, repor_total = itens_da_lista(request, 'repor')
+    retirar_itens, retirar_total = itens_da_lista(request, 'retirar')
+
     return render(request, 'produtos.html', {
         'produtos': Produto.objects.filter(filtro),
         'busca': busca,
         'tipo': tipo,
         'tipos': Produto.Tipo.choices,
+        'repor_itens': repor_itens,
+        'repor_total': repor_total,
+        'retirar_itens': retirar_itens,
+        'retirar_total': retirar_total,
+        'painel': request.GET.get('painel'),
     })
 
 
@@ -59,9 +67,10 @@ def editar(request, id):
 def excluir(request, id):
     Produto.objects.get(id=id).delete()
 
-    carrinho = request.session.get('carrinho', {})
-    carrinho.pop(str(id), None)
-    request.session['carrinho'] = carrinho
+    for lista in ['repor', 'retirar']:
+        itens = request.session.get(lista, {})
+        itens.pop(str(id), None)
+        request.session[lista] = itens
 
     return redirect('/produtos')
 
@@ -106,75 +115,88 @@ def saida(request, id):
     return redirect('/produtos')
 
 
-def adicionar_carrinho(request, id):
-    produto = Produto.objects.get(id=id)
-    quantidade = int(request.POST.get('quantidade') or 0)
-
-    carrinho = request.session.get('carrinho', {})
-    no_carrinho = carrinho.get(str(id), 0)
-
-    if quantidade < 1:
-        messages.error(request, 'Escolha pelo menos 1 unidade.')
-    elif no_carrinho + quantidade > produto.quantidade:
-        messages.error(request, f'So tem {produto.quantidade} unidade(s) de {produto.nome} no estoque e voce ja tem {no_carrinho} no carrinho.')
-    else:
-        carrinho[str(id)] = no_carrinho + quantidade
-        request.session['carrinho'] = carrinho
-        messages.success(request, f'{quantidade} unidade(s) de {produto.nome} no carrinho.')
-
-    return redirect('/produtos')
-
-
-def remover_carrinho(request, id):
-    carrinho = request.session.get('carrinho', {})
-    carrinho.pop(str(id), None)
-    request.session['carrinho'] = carrinho
-    return redirect('/carrinho')
-
-
-def carrinho(request):
-    carrinho = request.session.get('carrinho', {})
+def itens_da_lista(request, lista):
+    quantidades = request.session.get(lista, {})
 
     itens = []
     total = 0
-    for produto in Produto.objects.filter(id__in=carrinho.keys()):
-        quantidade = carrinho[str(produto.id)]
+    for produto in Produto.objects.filter(id__in=quantidades.keys()):
+        quantidade = quantidades[str(produto.id)]
         subtotal = produto.valor * quantidade
         total += subtotal
         itens.append({'produto': produto, 'quantidade': quantidade, 'subtotal': subtotal})
 
-    return render(request, 'carrinho.html', {'itens': itens, 'total': total})
+    return itens, total
 
 
-def comprar(request):
-    carrinho = request.session.get('carrinho', {})
+def adicionar(request, lista, id):
+    produto = Produto.objects.get(id=id)
+    quantidade = int(request.POST.get('quantidade') or 0)
+
+    itens = request.session.get(lista, {})
+    na_lista = itens.get(str(id), 0)
+
+    if quantidade < 1:
+        messages.error(request, 'Escolha pelo menos 1 unidade.')
+    elif lista == 'retirar' and na_lista + quantidade > produto.quantidade:
+        messages.error(request, f'So tem {produto.quantidade} unidade(s) de {produto.nome} no estoque e voce ja separou {na_lista} para retirar.')
+    else:
+        itens[str(id)] = na_lista + quantidade
+        request.session[lista] = itens
+        messages.success(request, f'{quantidade} unidade(s) de {produto.nome} na lista.')
+
+    return redirect(f'/produtos?painel={lista}')
+
+
+def remover(request, lista, id):
+    itens = request.session.get(lista, {})
+    itens.pop(str(id), None)
+    request.session[lista] = itens
+    return redirect(f'/produtos?painel={lista}')
+
+
+def confirmar(request, lista):
+    itens = request.session.get(lista, {})
 
     if request.method != 'POST':
-        return redirect('/carrinho')
+        return redirect('/produtos')
 
-    if not carrinho:
-        messages.error(request, 'O carrinho esta vazio.')
-        return redirect('/carrinho')
+    if not itens:
+        messages.error(request, 'A lista esta vazia.')
+        return redirect(f'/produtos?painel={lista}')
 
-    problemas = []
-    for id, quantidade in carrinho.items():
+    if lista == 'retirar':
+        problemas = []
+        for id, quantidade in itens.items():
+            produto = Produto.objects.filter(id=id).first()
+
+            if produto is None:
+                problemas.append('Um produto da lista foi excluido do estoque.')
+            elif quantidade > produto.quantidade:
+                problemas.append(f'{produto.nome}: voce quer retirar {quantidade}, mas so tem {produto.quantidade} no estoque.')
+
+        if problemas:
+            for problema in problemas:
+                messages.error(request, problema)
+            return redirect(f'/produtos?painel={lista}')
+
+    for id, quantidade in itens.items():
         produto = Produto.objects.filter(id=id).first()
 
         if produto is None:
-            problemas.append('Um produto do carrinho foi excluido do estoque.')
-        elif quantidade > produto.quantidade:
-            problemas.append(f'{produto.nome}: voce quer {quantidade}, mas so tem {produto.quantidade} no estoque.')
+            continue
 
-    if problemas:
-        for problema in problemas:
-            messages.error(request, problema)
-        return redirect('/carrinho')
-
-    for id, quantidade in carrinho.items():
-        produto = Produto.objects.get(id=id)
-        produto.quantidade -= quantidade
+        if lista == 'repor':
+            produto.quantidade += quantidade
+        else:
+            produto.quantidade -= quantidade
         produto.save()
 
-    request.session['carrinho'] = {}
-    messages.success(request, 'Compra finalizada! O estoque foi atualizado.')
-    return redirect('/carrinho')
+    request.session[lista] = {}
+
+    if lista == 'repor':
+        messages.success(request, 'Reposicao feita! O estoque foi atualizado.')
+    else:
+        messages.success(request, 'Retirada feita! O estoque foi atualizado.')
+
+    return redirect(f'/produtos?painel={lista}')

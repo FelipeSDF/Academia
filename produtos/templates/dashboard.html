@@ -16,18 +16,11 @@
                 <a href="/home" {% if request.path == '/home' %}class="ativo"{% endif %}>Cadastro</a>
                 <a href="/produtos" {% if request.path == '/produtos' %}class="ativo"{% endif %}>Produtos</a>
                 <a href="/dashboard" {% if request.path == '/dashboard' %}class="ativo"{% endif %}>Dashboard</a>
-                <a href="/carrinho" {% if request.path == '/carrinho' %}class="ativo"{% endif %}>🛒 Carrinho ({{ request.session.carrinho|length }})</a>
             </nav>
         </div>
     </header>
 
     <main>
-        {% if messages %}
-            {% for mensagem in messages %}
-                <p class="mensagem {{ mensagem.tags }}">{{ mensagem }}</p>
-            {% endfor %}
-        {% endif %}
-
         <div class="titulo">
             <h1>Dashboard</h1>
             <p>Resumo do estoque</p>
@@ -91,6 +84,7 @@
                     <span class="aviso {% if produto.quantidade == 0 %}zerado{% else %}baixo{% endif %}">
                         {{ produto.quantidade }} unidade{{ produto.quantidade|pluralize }}
                     </span>
+                    <a class="link-repor" href="/produtos?busca={{ produto.nome|urlencode }}&painel=repor">Repor</a>
                 </div>
             {% empty %}
                 <p class="vazio">Nenhum produto precisa de reposicao.</p>
@@ -150,7 +144,7 @@
                     tooltip: { callbacks: { label: item => reais(item.raw) } }
                 },
                 scales: {
-                    x: { beginAtZero: true, ticks: { callback: valor => reais(valor) }, border: { display: false } },
+                    x: { beginAtZero: true, ticks: { maxTicksLimit: 5, maxRotation: 0, callback: valor => reais(valor) }, border: { display: false } },
                     y: { grid: { display: false } }
                 }
             }

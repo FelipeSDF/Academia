@@ -6,8 +6,12 @@ Projeto Django simples para controle de estoque de produtos. Feito para a prova 
 
 - **Cadastro** (`/home`): cadastra um produto (nome, valor, quantidade, marca, data, tipo e link da imagem)
 - **Produtos** (`/produtos`): mostra os produtos em cards, com busca pelo nome e filtro por tipo.
-  Cada card tem os botoes + e - para entrada e saida do estoque (o - nao deixa a quantidade ficar negativa),
-  e os links de editar e excluir
+  Cada card tem os botoes + e - para ajustar o estoque de 1 em 1 e os links de editar e excluir
+- **Entrada e saida do estoque**: cada card tem um campo de quantidade e os botoes **Repor** e **Retirar**,
+  que colocam o produto em uma lista. As listas ficam em paineis flutuantes (Repor a esquerda, Retirar a direita)
+  com o subtotal de cada item e o total. Ao confirmar:
+  - **Repor** soma as quantidades no estoque
+  - **Retirar** confere se ainda tem estoque de todos os itens. Se faltar algum, nada e retirado e aparece o motivo
 - **Dashboard** (`/dashboard`): numeros do estoque (unidades, valor em estoque, preco medio, produtos zerados),
   graficos por categoria e a lista de produtos que precisam de reposicao
 
@@ -32,7 +36,7 @@ estoque/             configuracoes do projeto (settings, urls)
 produtos/            app principal
   models.py          model Produto
   forms.py           ProdutoForm (ModelForm) com a validacao do valor
-  views.py           cadastro, listagem, editar, excluir, entrada, saida e dashboard
+  views.py           cadastro, listagem, editar, excluir, dashboard e as listas de repor/retirar
   urls.py            rotas
   fixtures/
     produtos.json    produtos de exemplo

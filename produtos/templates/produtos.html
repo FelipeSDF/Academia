@@ -16,18 +16,11 @@
                 <a href="/home" {% if request.path == '/home' %}class="ativo"{% endif %}>Cadastro</a>
                 <a href="/produtos" {% if request.path == '/produtos' %}class="ativo"{% endif %}>Produtos</a>
                 <a href="/dashboard" {% if request.path == '/dashboard' %}class="ativo"{% endif %}>Dashboard</a>
-                <a href="/carrinho" {% if request.path == '/carrinho' %}class="ativo"{% endif %}>🛒 Carrinho ({{ request.session.carrinho|length }})</a>
             </nav>
         </div>
     </header>
 
     <main>
-        {% if messages %}
-            {% for mensagem in messages %}
-                <p class="mensagem {{ mensagem.tags }}">{{ mensagem }}</p>
-            {% endfor %}
-        {% endif %}
-
         <div class="titulo">
             <h1>Produtos</h1>
             <p>{{ produtos|length }} produto{{ produtos|length|pluralize }} no estoque</p>
@@ -83,17 +76,12 @@
                         </div>
                     </div>
 
-                    {% if produto.quantidade > 0 %}
-                        <form method='post' action="/carrinho/adicionar/{{ produto.id }}" class="adicionar">
-                            {% csrf_token %}
-                            <input type="number" name="quantidade" value="1" min="1" max="{{ produto.quantidade }}">
-                            <button class="botao">🛒 Adicionar</button>
-                        </form>
-                    {% else %}
-                        <div class="adicionar">
-                            <button class="botao" disabled>Sem estoque</button>
-                        </div>
-                    {% endif %}
+                    <form method='post' class="adicionar">
+                        {% csrf_token %}
+                        <input type="number" name="quantidade" value="1" min="1">
+                        <button class="botao botao-repor" formaction="/repor/adicionar/{{ produto.id }}">Repor</button>
+                        <button class="botao botao-retirar" formaction="/retirar/adicionar/{{ produto.id }}" {% if produto.quantidade == 0 %}disabled{% endif %}>Retirar</button>
+                    </form>
 
                     <div class="links">
                         <a href="/editar/{{ produto.id }}">Editar</a>
@@ -112,6 +100,116 @@
             {% endfor %}
         </div>
     </main>
+
+    <button class="botao-painel esquerda" onclick="document.querySelector('.painel.esquerda').classList.toggle('aberto')">
+        📥 Repor <span>{{ repor_itens|length }}</span>
+    </button>
+
+    <aside class="painel esquerda {% if painel == 'repor' %}aberto{% endif %}">
+        <div class="painel-topo">
+            <h2>📥 Repor</h2>
+            <button class="fechar" onclick="document.querySelector('.painel.esquerda').classList.remove('aberto')">✕</button>
+        </div>
+
+        {% if painel == 'repor' %}
+            {% for mensagem in messages %}
+                <p class="mensagem {{ mensagem.tags }}">{{ mensagem }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <div class="painel-itens">
+            {% for item in repor_itens %}
+
+                <div class="carrinho-item">
+                    {% if item.produto.imagem %}
+                        <img src="{{ item.produto.imagem }}" alt="{{ item.produto.nome }}">
+                    {% else %}
+                        <div class="repor-sem-foto">📦</div>
+                    {% endif %}
+
+                    <div class="carrinho-nome">
+                        <strong>{{ item.produto.nome }}</strong>
+                        <small>{{ item.quantidade }} x R$ {{ item.produto.valor|floatformat:2 }} · tem {{ item.produto.quantidade }}</small>
+                    </div>
+
+                    <strong class="subtotal">R$ {{ item.subtotal|floatformat:2 }}</strong>
+                    <a class="remover" href="/repor/remover/{{ item.produto.id }}" title="Remover">✕</a>
+                </div>
+
+            {% empty %}
+
+                <p class="vazio">Nenhum produto para repor. Use o botao Repor nos cards.</p>
+
+            {% endfor %}
+        </div>
+
+        {% if repor_itens %}
+            <div class="total">
+                <span>Total</span>
+                <strong>R$ {{ repor_total|floatformat:"2g" }}</strong>
+            </div>
+
+            <form method='post' action="/repor/confirmar">
+                {% csrf_token %}
+                <button class="botao botao-grande botao-repor">Repor</button>
+            </form>
+        {% endif %}
+    </aside>
+
+    <button class="botao-painel direita" onclick="document.querySelector('.painel.direita').classList.toggle('aberto')">
+        📤 Retirar <span>{{ retirar_itens|length }}</span>
+    </button>
+
+    <aside class="painel direita {% if painel == 'retirar' %}aberto{% endif %}">
+        <div class="painel-topo">
+            <h2>📤 Retirar</h2>
+            <button class="fechar" onclick="document.querySelector('.painel.direita').classList.remove('aberto')">✕</button>
+        </div>
+
+        {% if painel == 'retirar' %}
+            {% for mensagem in messages %}
+                <p class="mensagem {{ mensagem.tags }}">{{ mensagem }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <div class="painel-itens">
+            {% for item in retirar_itens %}
+
+                <div class="carrinho-item">
+                    {% if item.produto.imagem %}
+                        <img src="{{ item.produto.imagem }}" alt="{{ item.produto.nome }}">
+                    {% else %}
+                        <div class="repor-sem-foto">📦</div>
+                    {% endif %}
+
+                    <div class="carrinho-nome">
+                        <strong>{{ item.produto.nome }}</strong>
+                        <small>{{ item.quantidade }} x R$ {{ item.produto.valor|floatformat:2 }} · tem {{ item.produto.quantidade }}</small>
+                    </div>
+
+                    <strong class="subtotal">R$ {{ item.subtotal|floatformat:2 }}</strong>
+                    <a class="remover" href="/retirar/remover/{{ item.produto.id }}" title="Remover">✕</a>
+                </div>
+
+            {% empty %}
+
+                <p class="vazio">Nenhum produto para retirar. Use o botao Retirar nos cards.</p>
+
+            {% endfor %}
+        </div>
+
+        {% if retirar_itens %}
+            <div class="total">
+                <span>Total</span>
+                <strong>R$ {{ retirar_total|floatformat:"2g" }}</strong>
+            </div>
+
+            <form method='post' action="/retirar/confirmar">
+                {% csrf_token %}
+                <button class="botao botao-grande botao-retirar">Retirar</button>
+            </form>
+        {% endif %}
+    </aside>
 
 </body>
 </html>
