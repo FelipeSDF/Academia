@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biblioteca</title>
+    <title>Academia</title>
     <style>
         * { box-sizing: border-box; }
 
         body {
             margin: 0;
             font-family: "Segoe UI", Roboto, Arial, sans-serif;
-            background: #f4f1ea;
+            background: #f2f2f2;
             color: #2b2b2b;
         }
 
         header {
-            background: #3e2f23;
-            color: #f4f1ea;
+            background: #1f1f1f;
+            color: #f2f2f2;
             padding: 24px 16px;
             text-align: center;
         }
@@ -42,8 +42,8 @@
         .card h2 {
             margin: 0 0 16px;
             font-size: 1.2rem;
-            color: #3e2f23;
-            border-bottom: 2px solid #e8e1d4;
+            color: #1f1f1f;
+            border-bottom: 2px solid #e0e0e0;
             padding-bottom: 8px;
         }
 
@@ -58,18 +58,18 @@
         form textarea {
             width: 100%;
             padding: 10px 12px;
-            border: 1px solid #cfc6b8;
+            border: 1px solid #c9c9c9;
             border-radius: 8px;
             font-size: 1rem;
-            background: #fcfbf8;
+            background: #fafafa;
         }
 
         form input:focus,
         form select:focus,
         form textarea:focus {
             outline: none;
-            border-color: #8b5e3c;
-            box-shadow: 0 0 0 3px rgba(139, 94, 60, .2);
+            border-color: #c62828;
+            box-shadow: 0 0 0 3px rgba(198, 40, 40, .2);
         }
 
         form .errorlist {
@@ -87,29 +87,29 @@
             padding: 12px;
             border: none;
             border-radius: 8px;
-            background: #8b5e3c;
+            background: #c62828;
             color: #fff;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
         }
 
-        button:hover { background: #6f4a2f; }
+        button:hover { background: #8e0000; }
 
-        .livros {
+        .pesos {
             list-style: none;
             margin: 0;
             padding: 0;
         }
 
-        .livros li {
+        .pesos li {
             padding: 12px 8px;
             border-bottom: 1px solid #eee;
         }
 
-        .livros li:last-child { border-bottom: none; }
+        .pesos li:last-child { border-bottom: none; }
 
-        .livro {
+        .peso {
             display: flex;
             gap: 16px;
             align-items: center;
@@ -120,8 +120,8 @@
             width: 56px;
             height: 72px;
             border-radius: 4px 10px 10px 4px;
-            background: linear-gradient(135deg, #a0714f, #6f4a2f);
-            border-left: 6px solid #4a3222;
+            background: linear-gradient(135deg, #a0714f, #8e0000);
+            border-left: 6px solid #111111;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -130,8 +130,8 @@
         }
 
         .info { flex: 1; min-width: 0; }
-        .info h3 { margin: 0; font-size: 1.1rem; color: #3e2f23; }
-        .autor { margin: 2px 0 8px; color: #666; font-size: .95rem; }
+        .info h3 { margin: 0; font-size: 1.1rem; color: #1f1f1f; }
+        .marca { margin: 2px 0 8px; color: #666; font-size: .95rem; }
 
         .detalhes {
             display: flex;
@@ -142,8 +142,8 @@
         }
 
         .tag {
-            background: #f1e8dc;
-            color: #6f4a2f;
+            background: #ffe0e0;
+            color: #8e0000;
             padding: 2px 10px;
             border-radius: 999px;
         }
@@ -156,13 +156,13 @@
 <body>
 
     <header>
-        <h1>📚 Biblioteca</h1>
-        <p>Cadastro do acervo</p>
+        <h1>🏋️ Academia</h1>
+        <p>Cadastro dos pesos</p>
     </header>
 
     <main>
         <section class="card">
-            <h2>Novo livro</h2>
+            <h2>Novo peso</h2>
 
             <form method='post'>
 
@@ -176,27 +176,27 @@
         </section>
 
         <section class="card">
-            <h2>Livros cadastrados</h2>
+            <h2>Pesos cadastrados</h2>
 
-            <ul class="livros">
-                {% for livro in livros %}
+            <ul class="pesos">
+                {% for peso in pesos %}
 
-                    <li class="livro">
-                        <div class="capa">📖</div>
+                    <li class="peso">
+                        <div class="capa">🏋️</div>
                         <div class="info">
-                            <h3>{{ livro.nome }}</h3>
-                            <p class="autor">✍️ {{ livro.autor }}</p>
+                            <h3>{{ peso.nome }}</h3>
+                            <p class="marca">🏭 {{ peso.marca }}</p>
                             <div class="detalhes">
-                                <span class="tag">📚 {{ livro.get_classificacao_display }}</span>
-                                <span>📅 {{ livro.date|date:"d/m/Y" }}</span>
-                                <span class="preco">💰 R$ {{ livro.valor|floatformat:2 }}</span>
+                                <span class="tag">🏷️ {{ peso.get_tipo_display }}</span>
+                                <span>📅 {{ peso.date|date:"d/m/Y" }}</span>
+                                <span class="preco">💰 R$ {{ peso.valor|floatformat:2 }}</span>
                             </div>
                         </div>
                     </li>
 
                 {% empty %}
 
-                    <li class="vazio">Nenhum livro cadastrado.</li>
+                    <li class="vazio">Nenhum peso cadastrado.</li>
 
                 {% endfor %}
             </ul>
