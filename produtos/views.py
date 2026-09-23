@@ -9,7 +9,6 @@ def home(request):
     busca = request.GET.get('busca')
     tipo = request.GET.get('tipo')
 
-    # junta a busca e o filtro numa consulta so
     filtro = Q()
 
     if busca:
