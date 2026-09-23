@@ -12,6 +12,7 @@ class Produto(models.Model):
     marca = models.CharField(max_length=100)
     valor = models.FloatField()
     quantidade = models.PositiveIntegerField(default=0)
+    imagem = models.URLField(blank=True)
     date = models.DateField()
     tipo = models.CharField(
         max_length=3,
