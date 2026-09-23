@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Peso
-from .forms import PesoForm
+from .models import Produto
+from .forms import ProdutoForm
 
 
 # Create your views here.
@@ -8,17 +8,17 @@ def home(request):
     busca = request.GET.get('busca')
 
     if busca:
-        pesos = Peso.objects.filter(nome__icontains=busca)
+        produtos = Produto.objects.filter(nome__icontains=busca)
     else:
-        pesos = Peso.objects.all()
+        produtos = Produto.objects.all()
 
     if request.method == 'POST':
-        form = PesoForm(request.POST)
+        form = ProdutoForm(request.POST)
 
         if form.is_valid():
             form.save()
 
     else:
-        form = PesoForm()
+        form = ProdutoForm()
 
-    return render(request, 'index.html', {'form':form,'pesos': pesos,'busca': busca})
+    return render(request, 'index.html', {'form':form,'produtos': produtos,'busca': busca})

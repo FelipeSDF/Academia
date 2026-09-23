@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from pesos.models import Peso
+from produtos.models import Produto
 
 # Register your models here.
-admin.site.register(Peso)
+admin.site.register(Produto)
