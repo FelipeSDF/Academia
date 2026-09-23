@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Avg, Sum
 from django.shortcuts import render, redirect
 from .models import Produto
 from .forms import ProdutoForm
@@ -56,3 +56,21 @@ def editar(request, id):
 def excluir(request, id):
     Produto.objects.get(id=id).delete()
     return redirect('/home')
+
+
+def dashboard(request):
+    produtos = Produto.objects.all()
+
+    categorias = []
+    for valor, nome in Produto.Tipo.choices:
+        categorias.append({'nome': nome, 'quantidade': produtos.filter(tipo=valor).count()})
+
+    precos = produtos.aggregate(media=Avg('valor'), total=Sum('valor'))
+
+    return render(request, 'dashboard.html', {
+        'total': produtos.count(),
+        'categorias': categorias,
+        'precos': precos,
+        'mais_caro': produtos.order_by('-valor').first(),
+        'mais_barato': produtos.order_by('valor').first(),
+    })
