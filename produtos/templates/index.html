@@ -151,6 +151,38 @@
         .preco { font-weight: 600; color: #2e7d32; }
 
         .vazio { color: #888; font-style: italic; }
+
+        .busca {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .busca input { flex: 2 1 200px; }
+        .busca select { flex: 1 1 150px; width: auto; }
+        .busca button { margin: 0; width: auto; padding: 10px 18px; }
+
+        .acoes {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .acoes a {
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: .85rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .editar { background: #e3edfa; color: #0d3c78; }
+        .editar:hover { background: #cddff5; }
+
+        .excluir { background: #fdecea; color: #b3261e; }
+        .excluir:hover { background: #f9d6d2; }
     </style>
 </head>
 <body>
@@ -178,7 +210,7 @@
         <section class="card">
             <h2>Produtos cadastrados</h2>
 
-            <form method='get'>
+            <form method='get' class="busca">
                 <input type="text" name="busca" value="{{ busca|default_if_none:'' }}" placeholder="Pesquisar pelo nome">
                 <select name="tipo">
                     <option value="">Todas as categorias</option>
@@ -202,8 +234,10 @@
                                 <span>📅 {{ produto.date|date:"d/m/Y" }}</span>
                                 <span class="preco">💰 R$ {{ produto.valor|floatformat:2 }}</span>
                             </div>
-                            <a href="/editar/{{ produto.id }}">editar</a>
-                            <a href="/excluir/{{ produto.id }}">excluir</a>
+                        </div>
+                        <div class="acoes">
+                            <a class="editar" href="/editar/{{ produto.id }}">editar</a>
+                            <a class="excluir" href="/excluir/{{ produto.id }}" onclick="return confirm('Excluir {{ produto.nome }}?')">excluir</a>
                         </div>
                     </li>
 

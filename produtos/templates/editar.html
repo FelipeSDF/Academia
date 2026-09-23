@@ -2,17 +2,135 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar produto</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            background: #f2f2f2;
+            color: #2b2b2b;
+        }
+
+        header {
+            background: #1f1f1f;
+            color: #f2f2f2;
+            padding: 24px 16px;
+            text-align: center;
+        }
+
+        header h1 { margin: 0; font-size: 1.8rem; letter-spacing: 1px; }
+        header p { margin: 4px 0 0; opacity: .75; }
+
+        main {
+            max-width: 720px;
+            margin: 32px auto;
+            padding: 0 16px;
+            display: grid;
+            gap: 24px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+        }
+
+        .card h2 {
+            margin: 0 0 16px;
+            font-size: 1.2rem;
+            color: #1f1f1f;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+
+        form label {
+            display: block;
+            font-weight: 600;
+            margin: 12px 0 4px;
+        }
+
+        form input,
+        form select,
+        form textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #c9c9c9;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #fafafa;
+        }
+
+        form input:focus,
+        form select:focus,
+        form textarea:focus {
+            outline: none;
+            border-color: #1565c0;
+            box-shadow: 0 0 0 3px rgba(21, 101, 192, .2);
+        }
+
+        form .errorlist {
+            color: #b3261e;
+            margin: 4px 0 0;
+            padding-left: 18px;
+            font-size: .9rem;
+        }
+
+        form .helptext { font-size: .85rem; color: #777; }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #1565c0;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover { background: #0d3c78; }
+
+        .voltar {
+            display: block;
+            margin-top: 12px;
+            text-align: center;
+            color: #555;
+            text-decoration: none;
+        }
+
+        .voltar:hover { color: #1565c0; }
+    </style>
 </head>
 <body>
-    <h2>Editar produto</h2>
 
-    <form method='post'>
-        {% csrf_token %}
-        {{ form }}
-        <button> salvar </button>
-    </form>
+    <header>
+        <h1>📦 Estoque</h1>
+        <p>Cadastro dos produtos</p>
+    </header>
 
-    <a href="/home">voltar</a>
+    <main>
+        <section class="card">
+            <h2>Editar produto</h2>
+
+            <form method='post'>
+
+                {% csrf_token %}
+
+                {{ form }}
+
+                <button> salvar </button>
+
+            </form>
+
+            <a class="voltar" href="/home">voltar</a>
+        </section>
+    </main>
+
 </body>
 </html>
