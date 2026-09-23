@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class AcervoConfig(AppConfig):
-    name = 'acervo'
+class PesosConfig(AppConfig):
+    name = 'pesos'
