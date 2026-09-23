@@ -16,11 +16,18 @@
                 <a href="/home" {% if request.path == '/home' %}class="ativo"{% endif %}>Cadastro</a>
                 <a href="/produtos" {% if request.path == '/produtos' %}class="ativo"{% endif %}>Produtos</a>
                 <a href="/dashboard" {% if request.path == '/dashboard' %}class="ativo"{% endif %}>Dashboard</a>
+                <a href="/carrinho" {% if request.path == '/carrinho' %}class="ativo"{% endif %}>🛒 Carrinho ({{ request.session.carrinho|length }})</a>
             </nav>
         </div>
     </header>
 
     <main class="estreito">
+        {% if messages %}
+            {% for mensagem in messages %}
+                <p class="mensagem {{ mensagem.tags }}">{{ mensagem }}</p>
+            {% endfor %}
+        {% endif %}
+
         <div class="titulo">
             <h1>Novo produto</h1>
             <p>Preencha os dados para cadastrar no estoque</p>

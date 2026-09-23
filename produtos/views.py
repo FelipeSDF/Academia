@@ -1,4 +1,5 @@
 from django.db.models import Q, Avg
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from .models import Produto
 from .forms import ProdutoForm
@@ -57,6 +58,11 @@ def editar(request, id):
 
 def excluir(request, id):
     Produto.objects.get(id=id).delete()
+
+    carrinho = request.session.get('carrinho', {})
+    carrinho.pop(str(id), None)
+    request.session['carrinho'] = carrinho
+
     return redirect('/produtos')
 
 
@@ -98,3 +104,77 @@ def saida(request, id):
         produto.save()
 
     return redirect('/produtos')
+
+
+def adicionar_carrinho(request, id):
+    produto = Produto.objects.get(id=id)
+    quantidade = int(request.POST.get('quantidade') or 0)
+
+    carrinho = request.session.get('carrinho', {})
+    no_carrinho = carrinho.get(str(id), 0)
+
+    if quantidade < 1:
+        messages.error(request, 'Escolha pelo menos 1 unidade.')
+    elif no_carrinho + quantidade > produto.quantidade:
+        messages.error(request, f'So tem {produto.quantidade} unidade(s) de {produto.nome} no estoque e voce ja tem {no_carrinho} no carrinho.')
+    else:
+        carrinho[str(id)] = no_carrinho + quantidade
+        request.session['carrinho'] = carrinho
+        messages.success(request, f'{quantidade} unidade(s) de {produto.nome} no carrinho.')
+
+    return redirect('/produtos')
+
+
+def remover_carrinho(request, id):
+    carrinho = request.session.get('carrinho', {})
+    carrinho.pop(str(id), None)
+    request.session['carrinho'] = carrinho
+    return redirect('/carrinho')
+
+
+def carrinho(request):
+    carrinho = request.session.get('carrinho', {})
+
+    itens = []
+    total = 0
+    for produto in Produto.objects.filter(id__in=carrinho.keys()):
+        quantidade = carrinho[str(produto.id)]
+        subtotal = produto.valor * quantidade
+        total += subtotal
+        itens.append({'produto': produto, 'quantidade': quantidade, 'subtotal': subtotal})
+
+    return render(request, 'carrinho.html', {'itens': itens, 'total': total})
+
+
+def comprar(request):
+    carrinho = request.session.get('carrinho', {})
+
+    if request.method != 'POST':
+        return redirect('/carrinho')
+
+    if not carrinho:
+        messages.error(request, 'O carrinho esta vazio.')
+        return redirect('/carrinho')
+
+    problemas = []
+    for id, quantidade in carrinho.items():
+        produto = Produto.objects.filter(id=id).first()
+
+        if produto is None:
+            problemas.append('Um produto do carrinho foi excluido do estoque.')
+        elif quantidade > produto.quantidade:
+            problemas.append(f'{produto.nome}: voce quer {quantidade}, mas so tem {produto.quantidade} no estoque.')
+
+    if problemas:
+        for problema in problemas:
+            messages.error(request, problema)
+        return redirect('/carrinho')
+
+    for id, quantidade in carrinho.items():
+        produto = Produto.objects.get(id=id)
+        produto.quantidade -= quantidade
+        produto.save()
+
+    request.session['carrinho'] = {}
+    messages.success(request, 'Compra finalizada! O estoque foi atualizado.')
+    return redirect('/carrinho')
