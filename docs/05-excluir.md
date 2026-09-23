@@ -6,8 +6,8 @@
 from django.shortcuts import redirect
 
 def excluir(request, id):
-    peso = Peso.objects.get(id=id)
-    peso.delete()
+    produto = Produto.objects.get(id=id)
+    produto.delete()
     return redirect('/home')
 ```
 
@@ -22,7 +22,7 @@ path('excluir/<int:id>', views.excluir)
 ## O link
 
 ```html
-<a href="/excluir/{{ peso.id }}">excluir</a>
+<a href="/excluir/{{ produto.id }}">excluir</a>
 ```
 
 ## Por que o redirect
@@ -36,24 +36,24 @@ entao manda a pessoa de volta pra lista.
 Com um `confirm` do JavaScript, sem pagina nova:
 
 ```html
-<a href="/excluir/{{ peso.id }}" onclick="return confirm('Excluir esse peso?')">excluir</a>
+<a href="/excluir/{{ produto.id }}" onclick="return confirm('Excluir esse produto?')">excluir</a>
 ```
 
 Ou com uma pagina de confirmacao, que e o jeito mais correto:
 
 ```python
 def excluir(request, id):
-    peso = Peso.objects.get(id=id)
+    produto = Produto.objects.get(id=id)
 
     if request.method == 'POST':
-        peso.delete()
+        produto.delete()
         return redirect('/home')
 
-    return render(request, 'confirmar.html', {'peso': peso})
+    return render(request, 'confirmar.html', {'produto': produto})
 ```
 
 ```html
-<p>Excluir {{ peso.nome }}?</p>
+<p>Excluir {{ produto.nome }}?</p>
 <form method='post'>
     {% csrf_token %}
     <button> sim, excluir </button>

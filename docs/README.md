@@ -24,9 +24,9 @@ Toda funcionalidade se resume a duas perguntas:
 
 | Quero | Uso |
 |---|---|
-| tudo | `Peso.objects.all()` |
-| filtrado | `Peso.objects.filter(campo__icontains=x)` |
-| um so | `Peso.objects.get(id=x)` |
-| criar | `PesoForm(request.POST)` + `.save()` |
-| editar | `PesoForm(request.POST, instance=peso)` + `.save()` |
-| apagar | `peso.delete()` |
+| tudo | `Produto.objects.all()` |
+| filtrado | `Produto.objects.filter(campo__icontains=x)` |
+| um so | `Produto.objects.get(id=x)` |
+| criar | `ProdutoForm(request.POST)` + `.save()` |
+| editar | `ProdutoForm(request.POST, instance=produto)` + `.save()` |
+| apagar | `produto.delete()` |

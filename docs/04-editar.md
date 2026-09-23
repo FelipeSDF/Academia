@@ -8,15 +8,15 @@ E o cadastro com uma palavra a mais: **`instance`**.
 from django.shortcuts import render, redirect
 
 def editar(request, id):
-    peso = Peso.objects.get(id=id)              # pega o registro pelo id da URL
+    produto = Produto.objects.get(id=id)              # pega o registro pelo id da URL
 
     if request.method == 'POST':
-        form = PesoForm(request.POST, instance=peso)    # sem instance criaria um NOVO
+        form = ProdutoForm(request.POST, instance=produto)    # sem instance criaria um NOVO
         if form.is_valid():
             form.save()
             return redirect('/home')
     else:
-        form = PesoForm(instance=peso)          # abre ja preenchido
+        form = ProdutoForm(instance=produto)          # abre ja preenchido
 
     return render(request, 'editar.html', {'form': form})
 ```
@@ -33,7 +33,7 @@ dentro dos `<>` tem que ser igual ao parametro da funcao (`def editar(request, i
 ## O link na listagem
 
 ```html
-<a href="/editar/{{ peso.id }}">editar</a>
+<a href="/editar/{{ produto.id }}">editar</a>
 ```
 
 Todo registro tem um `id` automatico, criado pelo Django. Voce nao declara no model.
@@ -54,10 +54,10 @@ Igual ao de cadastro:
 
 | Sem instance | Com instance |
 |---|---|
-| `PesoForm(request.POST)` | `PesoForm(request.POST, instance=peso)` |
+| `ProdutoForm(request.POST)` | `ProdutoForm(request.POST, instance=produto)` |
 | cria um registro novo | altera o registro existente |
 
-`instance` no GET (`PesoForm(instance=peso)`) serve pra outra coisa: preencher os
+`instance` no GET (`ProdutoForm(instance=produto)`) serve pra outra coisa: preencher os
 campos com o que ja esta salvo, pra pessoa ver o que esta editando.
 
 ## Usando a mesma view pra criar e editar
@@ -66,8 +66,8 @@ Da pra fazer o `id` ser opcional:
 
 ```python
 def salvar(request, id=None):
-    peso = Peso.objects.get(id=id) if id else None
-    form = PesoForm(request.POST or None, instance=peso)
+    produto = Produto.objects.get(id=id) if id else None
+    form = ProdutoForm(request.POST or None, instance=produto)
     if form.is_valid():
         form.save()
         return redirect('/home')

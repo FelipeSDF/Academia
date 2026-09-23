@@ -4,16 +4,16 @@
 
 ```python
 from django.shortcuts import render
-from .models import Peso
-from .forms import PesoForm
+from .models import Produto
+from .forms import ProdutoForm
 
 def home(request):
     if request.method == 'POST':
-        form = PesoForm(request.POST)      # form com os dados que chegaram
+        form = ProdutoForm(request.POST)      # form com os dados que chegaram
         if form.is_valid():
             form.save()                    # grava no banco
     else:
-        form = PesoForm()                  # form vazio
+        form = ProdutoForm()                  # form vazio
 
     return render(request, 'index.html', {'form': form})
 ```
@@ -32,7 +32,7 @@ def home(request):
 
 - **`request.method == 'POST'`** — a mesma view atende duas situacoes: abrir a pagina
   (GET, mostra o form vazio) e receber o envio (POST, salva). O `if` separa as duas.
-- **`PesoForm(request.POST)`** — sem o `request.POST` dentro, o form nasce vazio e
+- **`ProdutoForm(request.POST)`** — sem o `request.POST` dentro, o form nasce vazio e
   nao salva nada. Esse e o erro mais comum.
 - **`form.is_valid()`** — valida os campos. Se estiver invalido, o form volta pro
   template ja com as mensagens de erro dentro dele.
@@ -54,7 +54,7 @@ Do jeito acima, os dados continuam na tela depois de salvar. Para limpar:
 ```python
 if form.is_valid():
     form.save()
-    form = PesoForm()       # troca por um vazio
+    form = ProdutoForm()       # troca por um vazio
 ```
 
 Ou redirecionar (melhor, evita salvar duas vezes se o usuario der F5):

@@ -4,11 +4,11 @@
 |---|---|---|
 | `TemplateDoesNotExist` | app fora do `INSTALLED_APPS`, ou template fora de `app/templates/` | registrar o app / mover o arquivo |
 | `CSRF verification failed` | faltou `{% csrf_token %}` num form `post` | por a tag dentro do `<form>` |
-| `no such table: pesos_peso` | faltou rodar as migracoes | `makemigrations` + `migrate` |
+| `no such table: produtos_produto` | faltou rodar as migracoes | `makemigrations` + `migrate` |
 | `no such column` | mexeu no model e nao migrou | `makemigrations` + `migrate` |
 | `NoReverseMatch` | usou `{% url 'x' %}` sem `name='x'` na rota | por o `name=` no `path()` |
 | `didn't return an HttpResponse` | a view nao tem `return render(...)` ou `redirect(...)` | devolver alguma resposta |
-| `Peso matching query does not exist` | `.get(id=...)` com id que nao existe | conferir o link, ou usar `get_object_or_404` |
+| `Produto matching query does not exist` | `.get(id=...)` com id que nao existe | conferir o link, ou usar `get_object_or_404` |
 | `Page not found (404)` | a URL digitada nao bate com nenhum `path()` | conferir `urls.py` (este projeto usa `/home`, sem barra no fim) |
 | `Port is already in use` | ja tem um servidor rodando | `Ctrl+C` no outro terminal, ou `runserver 8080` |
 
@@ -21,8 +21,8 @@ Esses sao os piores, porque a pagina abre normal e so nao faz o que deveria.
 Quase sempre e o `request.POST` que faltou:
 
 ```python
-form = PesoForm()               # errado — nasce vazio, is_valid() da False
-form = PesoForm(request.POST)   # certo
+form = ProdutoForm()               # errado — nasce vazio, is_valid() da False
+form = ProdutoForm(request.POST)   # certo
 ```
 
 Se ainda assim nao salvar, e porque falta o `.save()` dentro do `if form.is_valid():`,
@@ -39,18 +39,18 @@ Aparece no terminal onde o `runserver` esta rodando.
 O nome no contexto esta diferente do nome no `{% for %}`:
 
 ```python
-return render(request, 'index.html', {'pesos': pesos})
+return render(request, 'index.html', {'produtos': produtos})
 ```
 
 ```html
-{% for peso in pesos %}      <- tem que ser 'pesos', igual a chave
+{% for produto in produtos %}      <- tem que ser 'produtos', igual a chave
 ```
 
 **O choice mostra codigo em vez do texto**
 
 ```html
-{{ peso.tipo }}                 HAL
-{{ peso.get_tipo_display }}     Halter   <- este
+{{ produto.tipo }}                 ALI
+{{ produto.get_tipo_display }}     Alimento   <- este
 ```
 
 **O CSS nao carrega**
@@ -68,4 +68,4 @@ A pagina amarela de erro tem tudo. Duas coisas resolvem 90%:
 
 1. A **primeira linha em negrito** no topo diz o que aconteceu
 2. No meio da pilha, procure a linha que aponta pro **seu** arquivo
-   (`pesos/views.py`), nao pros arquivos de dentro do `django/`. O erro esta la.
+   (`produtos/views.py`), nao pros arquivos de dentro do `django/`. O erro esta la.

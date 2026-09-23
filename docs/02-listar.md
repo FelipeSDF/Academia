@@ -4,21 +4,21 @@
 
 ```python
 def home(request):
-    pesos = Peso.objects.all()
-    return render(request, 'index.html', {'pesos': pesos})
+    produtos = Produto.objects.all()
+    return render(request, 'index.html', {'produtos': produtos})
 ```
 
 O dicionario no final do `render` e o **contexto**: e a unica coisa que o template
-enxerga. A chave (`'pesos'`) e o nome que voce vai usar no HTML.
+enxerga. A chave (`'produtos'`) e o nome que voce vai usar no HTML.
 
 ## O template
 
 ```html
 <ul>
-    {% for peso in pesos %}
-        <li>{{ peso.nome }} - {{ peso.marca }}</li>
+    {% for produto in produtos %}
+        <li>{{ produto.nome }} - {{ produto.marca }}</li>
     {% empty %}
-        <li>Nenhum peso cadastrado.</li>
+        <li>Nenhum produto cadastrado.</li>
     {% endfor %}
 </ul>
 ```
@@ -29,9 +29,9 @@ enxerga. A chave (`'pesos'`) e o nome que voce vai usar no HTML.
 ## Formatando os valores
 
 ```html
-{{ peso.valor|floatformat:2 }}      12.50
-{{ peso.date|date:"d/m/Y" }}        23/09/2026
-{{ peso.get_tipo_display }}         Halter   (em vez de HAL)
+{{ produto.valor|floatformat:2 }}      12.50
+{{ produto.date|date:"d/m/Y" }}        23/09/2026
+{{ produto.get_tipo_display }}         Alimento   (em vez de ALI)
 ```
 
 O `|` e um **filtro**: transforma o valor antes de mostrar. O `:` passa um argumento.
@@ -42,17 +42,17 @@ codigo cru que esta salvo no banco.
 ## Ordenando
 
 ```python
-Peso.objects.all().order_by('nome')      # A -> Z
-Peso.objects.all().order_by('-valor')    # maior -> menor (o menos inverte)
+Produto.objects.all().order_by('nome')      # A -> Z
+Produto.objects.all().order_by('-valor')    # maior -> menor (o menos inverte)
 ```
 
 ## Contando
 
 ```html
-{{ pesos|length }} pesos cadastrados
+{{ produtos|length }} produtos cadastrados
 ```
 
 ## Erro classico
 
 Se a lista aparece vazia mesmo tendo dados, quase sempre o nome no contexto
-(`{'pesos': ...}`) esta diferente do nome no `{% for %}`. Eles tem que bater.
+(`{'produtos': ...}`) esta diferente do nome no `{% for %}`. Eles tem que bater.

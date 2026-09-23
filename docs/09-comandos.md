@@ -20,8 +20,8 @@ python -m venv venv
 venv\Scripts\activate               # Windows
 pip install django
 
-django-admin startproject academia .    # o ponto evita criar pasta duplicada
-python manage.py startapp pesos
+django-admin startproject estoque .    # o ponto evita criar pasta duplicada
+python manage.py startapp produtos
 ```
 
 Depois do `startapp`, registre o app no `settings.py`:
@@ -29,7 +29,7 @@ Depois do `startapp`, registre o app no `settings.py`:
 ```python
 INSTALLED_APPS = [
     ...
-    'pesos',
+    'produtos',
 ]
 ```
 
@@ -59,12 +59,12 @@ pip install -r requirements.txt     # instala a lista em outra maquina
 
 ```bash
 python manage.py showmigrations                 # ve o que ja foi aplicado
-python manage.py makemigrations pesos           # so de um app
-python manage.py migrate pesos 0001             # volta pra uma migracao anterior
+python manage.py makemigrations produtos           # so de um app
+python manage.py migrate produtos 0001             # volta pra uma migracao anterior
 ```
 
 Em projeto de estudo, quando o banco embola de vez, o caminho rapido e apagar o
-`db.sqlite3` e os arquivos numerados de `pesos/migrations/` (menos o `__init__.py`)
+`db.sqlite3` e os arquivos numerados de `produtos/migrations/` (menos o `__init__.py`)
 e rodar `makemigrations` + `migrate` de novo. Isso **apaga todos os dados** — so
 faca em projeto de aula.
 
@@ -75,10 +75,10 @@ python manage.py shell
 ```
 
 ```python
-from pesos.models import Peso
-Peso.objects.all()
-Peso.objects.filter(nome__icontains='hal')
-Peso.objects.create(nome='Halter 10kg', marca='X', valor=90, date='2026-09-23', tipo='HAL')
+from produtos.models import Produto
+Produto.objects.all()
+Produto.objects.filter(nome__icontains='arr')
+Produto.objects.create(nome='Arroz 5kg', marca='X', valor=90, date='2026-09-23', tipo='ALI')
 ```
 
 Otimo pra conferir se o filtro que voce escreveu na view devolve o que voce espera.

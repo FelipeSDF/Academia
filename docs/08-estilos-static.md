@@ -10,9 +10,9 @@ sem o Django gerar nada.
 Dentro do app, seguindo o padrao `app/static/app/`:
 
 ```
-pesos/
+produtos/
   static/
-    pesos/
+    produtos/
       style.css
 ```
 
@@ -27,7 +27,7 @@ com o nome do app evita a colisao.
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="{% static 'pesos/style.css' %}">
+    <link rel="stylesheet" href="{% static 'produtos/style.css' %}">
 </head>
 ```
 
@@ -74,7 +74,7 @@ Resultado:
 ```
 staticfiles/            <- criada pelo comando, e so copia
   admin/                <- o CSS do admin do Django veio junto
-  pesos/
+  produtos/
     style.css
 ```
 
@@ -103,14 +103,14 @@ O `collectstatic` tambem recolhe dessas pastas.
 
 | Nome | O que e |
 |---|---|
-| `STATIC_URL` | o prefixo na URL: `/static/pesos/style.css` |
+| `STATIC_URL` | o prefixo na URL: `/static/produtos/style.css` |
 | `STATICFILES_DIRS` | pastas extras **de onde ler**, fora dos apps |
 | `STATIC_ROOT` | pasta unica **pra onde copiar**, so usada pelo collectstatic |
 
 ## Imagem no template
 
 ```html
-<img src="{% static 'pesos/logo.png' %}" alt="logo">
+<img src="{% static 'produtos/logo.png' %}" alt="logo">
 ```
 
 Mesma coisa: `{% load static %}` no topo e `{% static %}` no caminho.

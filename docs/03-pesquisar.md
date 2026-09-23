@@ -6,14 +6,14 @@ E a listagem com `.filter()` no lugar do `.all()`.
 
 ```python
 def home(request):
-    busca = request.GET.get('busca')        # le da URL: /home?busca=halter
+    busca = request.GET.get('busca')        # le da URL: /home?busca=arroz
 
     if busca:
-        pesos = Peso.objects.filter(nome__icontains=busca)
+        produtos = Produto.objects.filter(nome__icontains=busca)
     else:
-        pesos = Peso.objects.all()
+        produtos = Produto.objects.all()
 
-    return render(request, 'index.html', {'pesos': pesos, 'busca': busca})
+    return render(request, 'index.html', {'produtos': produtos, 'busca': busca})
 ```
 
 ## O template
@@ -28,7 +28,7 @@ def home(request):
 ## Por que cada parte existe
 
 - **`method='get'`** — a busca so le, nao muda o banco. Por isso vira parte da URL
-  (`/home?busca=halter`) e nao precisa de `{% csrf_token %}`. O form de cadastro e
+  (`/home?busca=arroz`) e nao precisa de `{% csrf_token %}`. O form de cadastro e
   `post` porque grava.
 - **`name="busca"`** no input e **`.get('busca')`** na view — essa string igual nos
   dois lugares e a unica ligacao entre o HTML e o Python. Se errar uma letra, nao funciona.
@@ -45,14 +45,14 @@ def home(request):
 O padrao e `campo__comparacao=valor`:
 
 ```python
-nome__icontains='hal'      contem, ignorando maiuscula   -> LIKE %hal%
+nome__icontains='arr'      contem, ignorando maiuscula   -> LIKE %arr%
 nome__contains='Hal'       contem, respeitando maiuscula
-nome__exact='Halter'       igual exato
-nome__startswith='Hal'     comeca com
+nome__exact='Arroz'       igual exato
+nome__startswith='Arr'     comeca com
 valor__gte=100             maior ou igual
 valor__lte=100             menor ou igual
 date__year=2026            ano da data
-tipo='HAL'                 sem __ nenhum = igual
+tipo='ALI'                 sem __ nenhum = igual
 ```
 
 ## Filtrando por mais de um campo
@@ -60,14 +60,14 @@ tipo='HAL'                 sem __ nenhum = igual
 Virgula significa E:
 
 ```python
-Peso.objects.filter(nome__icontains=busca, tipo='HAL')
+Produto.objects.filter(nome__icontains=busca, tipo='ALI')
 ```
 
 Para OU, precisa do `Q`:
 
 ```python
 from django.db.models import Q
-Peso.objects.filter(Q(nome__icontains=busca) | Q(marca__icontains=busca))
+Produto.objects.filter(Q(nome__icontains=busca) | Q(marca__icontains=busca))
 ```
 
 ## Busca em dois campos ao mesmo tempo
@@ -77,7 +77,7 @@ Util quando o usuario digita e nao sabe se e nome ou marca — use o `Q` acima.
 ## Juntando busca e ordenacao
 
 ```python
-pesos = Peso.objects.filter(nome__icontains=busca).order_by('nome')
+produtos = Produto.objects.filter(nome__icontains=busca).order_by('nome')
 ```
 
 Pode encadear a vontade: o Django so vai no banco quando o resultado e usado.

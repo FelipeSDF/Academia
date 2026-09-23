@@ -1,20 +1,20 @@
-# Academia
+# Estoque
 
-Projeto Django simples para cadastro de pesos de uma academia. Feito para a prova de Django.
+Projeto Django simples para cadastro de produtos de um estoque. Feito para a prova de Django.
 
 ## O que faz
 
-- Cadastra um peso (nome, marca, valor, data e tipo)
-- Lista todos os pesos cadastrados
+- Cadastra um produto (nome, marca, valor, data e tipo)
+- Lista todos os produtos cadastrados
 - Pesquisa pelo nome
 
 ## Estrutura
 
 ```
-academia/          configuracoes do projeto (settings, urls)
-pesos/             app principal
-  models.py        model Peso
-  forms.py         PesoForm (ModelForm)
+estoque/           configuracoes do projeto (settings, urls)
+produtos/          app principal
+  models.py        model Produto
+  forms.py         ProdutoForm (ModelForm)
   views.py         view home (cadastro + listagem + busca)
   urls.py          rota /home
   templates/
@@ -49,8 +49,8 @@ Disponivel em http://127.0.0.1:8000/admin/
 
 | Campo | Tipo | Observacao |
 |-------|------|------------|
-| nome  | CharField | nome do peso |
+| nome  | CharField | nome do produto |
 | marca | CharField | fabricante |
 | valor | FloatField | preco |
-| date  | DateField | data de compra |
-| tipo  | CharField | choices: Halter, Anilha, Barra, Kettlebell, Caneleira |
+| date  | DateField | data de entrada |
+| tipo  | CharField | choices: Alimento, Bebida, Limpeza, Higiene, Papelaria |

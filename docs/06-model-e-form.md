@@ -1,15 +1,15 @@
 # Como criar o model e o form
 
-## O model (`pesos/models.py`)
+## O model (`produtos/models.py`)
 
 ```python
 from django.db import models
 
-class Peso(models.Model):
+class Produto(models.Model):
     class Tipo(models.TextChoices):
-        HALTER = 'HAL', 'Halter'          # valor no banco, texto na tela
-        ANILHA = 'ANI', 'Anilha'
-        BARRA = 'BAR', 'Barra'
+        ALIMENTO = 'ALI', 'Alimento'      # valor no banco, texto na tela
+        BEBIDA = 'BEB', 'Bebida'
+        LIMPEZA = 'LIM', 'Limpeza'
 
     nome = models.CharField(max_length=100)
     marca = models.CharField(max_length=100)
@@ -18,7 +18,7 @@ class Peso(models.Model):
     tipo = models.CharField(
         max_length=3,
         choices=Tipo.choices,
-        default=Tipo.HALTER,
+        default=Tipo.ALIMENTO,
     )
 
     def __str__(self):
@@ -57,7 +57,7 @@ verbose_name=''  nome que aparece na label
 `TextChoices` faz o campo virar um `<select>` no form automaticamente.
 
 ```python
-HALTER = 'HAL', 'Halter'
+ALIMENTO = 'ALI', 'Alimento'
 #         ^^^^^  ^^^^^^^^
 #         banco   tela
 ```
@@ -65,8 +65,8 @@ HALTER = 'HAL', 'Halter'
 No template, para mostrar o texto bonito:
 
 ```html
-{{ peso.get_tipo_display }}     Halter
-{{ peso.tipo }}                 HAL
+{{ produto.get_tipo_display }}     Alimento
+{{ produto.tipo }}                 ALI
 ```
 
 ## Depois de mexer no model, SEMPRE
@@ -79,15 +79,15 @@ python manage.py migrate
 `makemigrations` escreve o arquivo com as instrucoes. `migrate` executa no banco.
 Esquecer isso da o erro `no such table` ou `no such column`.
 
-## O form (`pesos/forms.py`)
+## O form (`produtos/forms.py`)
 
 ```python
 from django import forms
-from .models import Peso
+from .models import Produto
 
-class PesoForm(forms.ModelForm):
+class ProdutoForm(forms.ModelForm):
     class Meta:
-        model = Peso
+        model = Produto
         fields = ['nome', 'valor', 'marca', 'date', 'tipo']
 ```
 
@@ -103,9 +103,9 @@ Por padrao o `DateField` vira uma caixa de texto onde a pessoa tem que digitar
 `2026-09-23`. Para virar um seletor de data do navegador:
 
 ```python
-class PesoForm(forms.ModelForm):
+class ProdutoForm(forms.ModelForm):
     class Meta:
-        model = Peso
+        model = Produto
         fields = ['nome', 'valor', 'marca', 'date', 'tipo']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
@@ -117,17 +117,17 @@ classe de CSS ou placeholder:
 
 ```python
 widgets = {
-    'nome': forms.TextInput(attrs={'placeholder': 'Ex: Halter 10kg', 'class': 'input'}),
+    'nome': forms.TextInput(attrs={'placeholder': 'Ex: Arroz 5kg', 'class': 'input'}),
 }
 ```
 
-## Registrando no admin (`pesos/admin.py`)
+## Registrando no admin (`produtos/admin.py`)
 
 ```python
 from django.contrib import admin
-from pesos.models import Peso
+from produtos.models import Produto
 
-admin.site.register(Peso)
+admin.site.register(Produto)
 ```
 
 Sem essa linha o model nao aparece em `/admin/`.

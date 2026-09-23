@@ -2,7 +2,7 @@
 
 Sao dois arquivos: o do app e o do projeto.
 
-## 1. No app (`pesos/urls.py`)
+## 1. No app (`produtos/urls.py`)
 
 ```python
 from . import views
@@ -15,16 +15,16 @@ urls = [
 ]
 ```
 
-## 2. No projeto (`academia/urls.py`)
+## 2. No projeto (`estoque/urls.py`)
 
 ```python
 from django.contrib import admin
 from django.urls import path
-from pesos import urls as pesosViews
+from produtos import urls as produtosViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-] + pesosViews.urls
+] + produtosViews.urls
 ```
 
 Aqui a lista do app e somada na lista do projeto. Esse e o jeito que este projeto
@@ -36,7 +36,7 @@ from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('pesos.urls')),
+    path('', include('produtos.urls')),
 ]
 
 # no app, a lista precisa se chamar urlpatterns
@@ -69,7 +69,7 @@ Ai no template voce usa o nome em vez do caminho:
 
 ```html
 <a href="{% url 'home' %}">inicio</a>
-<a href="{% url 'editar' peso.id %}">editar</a>
+<a href="{% url 'editar' produto.id %}">editar</a>
 ```
 
 Vantagem: se um dia mudar o caminho de `/home` pra `/inicio`, os links continuam
