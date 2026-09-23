@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar produto</title>
+</head>
+<body>
+    <h2>Editar produto</h2>
+
+    <form method='post'>
+        {% csrf_token %}
+        {{ form }}
+        <button> salvar </button>
+    </form>
+
+    <a href="/home">voltar</a>
+</body>
+</html>

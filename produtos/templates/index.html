@@ -202,6 +202,8 @@
                                 <span>📅 {{ produto.date|date:"d/m/Y" }}</span>
                                 <span class="preco">💰 R$ {{ produto.valor|floatformat:2 }}</span>
                             </div>
+                            <a href="/editar/{{ produto.id }}">editar</a>
+                            <a href="/excluir/{{ produto.id }}">excluir</a>
                         </div>
                     </li>
 

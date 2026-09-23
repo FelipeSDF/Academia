@@ -1,5 +1,5 @@
 from django.db.models import Q
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Produto
 from .forms import ProdutoForm
 
@@ -36,3 +36,24 @@ def home(request):
         'tipo': tipo,
         'tipos': Produto.Tipo.choices,
     })
+
+
+def editar(request, id):
+    produto = Produto.objects.get(id=id)
+
+    if request.method == 'POST':
+        form = ProdutoForm(request.POST, instance=produto)
+
+        if form.is_valid():
+            form.save()
+            return redirect('/home')
+
+    else:
+        form = ProdutoForm(instance=produto)
+
+    return render(request, 'editar.html', {'form': form})
+
+
+def excluir(request, id):
+    Produto.objects.get(id=id).delete()
+    return redirect('/home')
