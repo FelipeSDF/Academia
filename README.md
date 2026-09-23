@@ -38,8 +38,6 @@ produtos/            app principal
   forms.py           ProdutoForm (ModelForm) com a validacao do valor
   views.py           cadastro, listagem, editar, excluir, dashboard e as listas de repor/retirar
   urls.py            rotas
-  fixtures/
-    produtos.json    produtos de exemplo
   static/produtos/
     style.css        o CSS de todas as telas
   templates/
@@ -47,6 +45,7 @@ produtos/            app principal
     produtos.html
     editar.html
     dashboard.html
+db.sqlite3           banco com os produtos cadastrados
 manage.py
 ```
 
@@ -59,8 +58,6 @@ python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
 
-python manage.py migrate
-python manage.py loaddata produtos
 python manage.py runserver
 ```
 
@@ -68,8 +65,7 @@ No Linux/Mac o segundo comando e `source venv/bin/activate`.
 
 Depois abra http://127.0.0.1:8000/home
 
-O banco (`db.sqlite3`) nao vai para o repositorio, entao o `migrate` cria um novo na primeira vez
-e o `loaddata` coloca os produtos de exemplo nele.
+O banco (`db.sqlite3`) vai junto no repositorio, ja com os produtos e as imagens cadastrados.
 
 Os graficos do dashboard usam o Chart.js pela internet, entao precisam de conexao para aparecer.
 As imagens dos produtos tambem sao links da internet.

@@ -1,7 +1,6 @@
 __pycache__/
 venv/
 projeto_biblioteca/
-db.sqlite3
 /*.pdf
 docs/*.md
 docs/*.pdf
