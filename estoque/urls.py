@@ -1,5 +1,5 @@
 """
-URL configuration for academia project.
+URL configuration for estoque project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/6.1/topics/http/urls/
@@ -16,8 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from pesos import urls as pesosViews
+from produtos import urls as produtosViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-] + pesosViews.urls
+] + produtosViews.urls
