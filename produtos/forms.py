@@ -4,7 +4,7 @@ from .models import Produto
 class ProdutoForm(forms.ModelForm):
     class Meta:
         model = Produto
-        fields = ['nome','valor','marca','date', 'tipo']
+        fields = ['nome','valor','quantidade','marca','date', 'tipo']
         labels = {'date': 'Data de entrada'}
         widgets = {'date': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d')}
 

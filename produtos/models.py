@@ -11,6 +11,7 @@ class Produto(models.Model):
     nome = models.CharField(max_length=100)
     marca = models.CharField(max_length=100)
     valor = models.FloatField()
+    quantidade = models.PositiveIntegerField(default=0)
     date = models.DateField()
     tipo = models.CharField(
         max_length=3,

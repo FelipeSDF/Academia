@@ -6,6 +6,20 @@ from .forms import ProdutoForm
 
 # Create your views here.
 def home(request):
+    if request.method == 'POST':
+        form = ProdutoForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect('/produtos')
+
+    else:
+        form = ProdutoForm()
+
+    return render(request, 'cadastro.html', {'form': form})
+
+
+def produtos(request):
     busca = request.GET.get('busca')
     tipo = request.GET.get('tipo')
 
@@ -17,20 +31,8 @@ def home(request):
     if tipo:
         filtro &= Q(tipo=tipo)
 
-    produtos = Produto.objects.filter(filtro)
-
-    if request.method == 'POST':
-        form = ProdutoForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-
-    else:
-        form = ProdutoForm()
-
-    return render(request, 'index.html', {
-        'form': form,
-        'produtos': produtos,
+    return render(request, 'produtos.html', {
+        'produtos': Produto.objects.filter(filtro),
         'busca': busca,
         'tipo': tipo,
         'tipos': Produto.Tipo.choices,
@@ -45,7 +47,7 @@ def editar(request, id):
 
         if form.is_valid():
             form.save()
-            return redirect('/home')
+            return redirect('/produtos')
 
     else:
         form = ProdutoForm(instance=produto)
@@ -55,7 +57,7 @@ def editar(request, id):
 
 def excluir(request, id):
     Produto.objects.get(id=id).delete()
-    return redirect('/home')
+    return redirect('/produtos')
 
 
 def dashboard(request):
@@ -79,3 +81,20 @@ def dashboard(request):
         'mais_caro': produtos.order_by('-valor').first(),
         'mais_barato': produtos.order_by('valor').first(),
     })
+
+
+def entrada(request, id):
+    produto = Produto.objects.get(id=id)
+    produto.quantidade += 1
+    produto.save()
+    return redirect('/produtos')
+
+
+def saida(request, id):
+    produto = Produto.objects.get(id=id)
+
+    if produto.quantidade > 0:
+        produto.quantidade -= 1
+        produto.save()
+
+    return redirect('/produtos')

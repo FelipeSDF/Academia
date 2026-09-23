@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar produto</title>
+    <title>Cadastro</title>
     <style>
         * { box-sizing: border-box; }
 
@@ -99,23 +99,13 @@
         }
 
         button:hover { background: #0d3c78; }
-
-        .voltar {
-            display: block;
-            margin-top: 12px;
-            text-align: center;
-            color: #555;
-            text-decoration: none;
-        }
-
-        .voltar:hover { color: #1565c0; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>📦 Estoque</h1>
-        <p>Cadastro dos produtos</p>
+        <p>Cadastro de produtos</p>
         <nav>
             <a href="/home">Cadastro</a>
             <a href="/produtos">Produtos</a>
@@ -125,7 +115,7 @@
 
     <main>
         <section class="card">
-            <h2>Editar produto</h2>
+            <h2>Novo produto</h2>
 
             <form method='post'>
 
@@ -136,8 +126,6 @@
                 <button> salvar </button>
 
             </form>
-
-            <a class="voltar" href="/produtos">voltar</a>
         </section>
     </main>
 
