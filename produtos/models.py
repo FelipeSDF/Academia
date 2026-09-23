@@ -1,12 +1,12 @@
 from django.db import models
 
-class Peso(models.Model):
+class Produto(models.Model):
     class Tipo(models.TextChoices):
-        HALTER = 'HAL', 'Halter'
-        ANILHA = 'ANI', 'Anilha'
-        BARRA = 'BAR', 'Barra'
-        KETTLEBELL = 'KET', 'Kettlebell'
-        CANELEIRA = 'CAN', 'Caneleira'
+        ALIMENTO = 'ALI', 'Alimento'
+        BEBIDA = 'BEB', 'Bebida'
+        LIMPEZA = 'LIM', 'Limpeza'
+        HIGIENE = 'HIG', 'Higiene'
+        PAPELARIA = 'PAP', 'Papelaria'
 
     nome = models.CharField(max_length=100)
     marca = models.CharField(max_length=100)
@@ -15,7 +15,7 @@ class Peso(models.Model):
     tipo = models.CharField(
         max_length=3,
         choices=Tipo.choices,
-        default=Tipo.HALTER,
+        default=Tipo.ALIMENTO,
     )
 
     def __str__(self):
