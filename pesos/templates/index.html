@@ -178,6 +178,11 @@
         <section class="card">
             <h2>Pesos cadastrados</h2>
 
+            <form method='get'>
+                <input type="text" name="busca" value="{{ busca|default_if_none:'' }}" placeholder="Pesquisar pelo nome">
+                <button> pesquisar </button>
+            </form>
+
             <ul class="pesos">
                 {% for peso in pesos %}
 
