@@ -1,19 +1,19 @@
 from django.shortcuts import render
-from .models import Livro
-from .forms import LivroForm
+from .models import Peso
+from .forms import PesoForm
 
 
 # Create your views here.
 def home(request):
-    livros = Livro.objects.all()
+    pesos = Peso.objects.all()
 
     if request.method == 'POST':
-        form = LivroForm(request.POST)
+        form = PesoForm(request.POST)
 
         if form.is_valid():
             form.save()
 
     else:
-        form = LivroForm()
+        form = PesoForm()
 
-    return render(request, 'index.html', {'form':form,'livros': livros})
+    return render(request, 'index.html', {'form':form,'pesos': pesos})
