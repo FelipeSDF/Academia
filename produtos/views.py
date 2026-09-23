@@ -1,4 +1,4 @@
-from django.db.models import Q, Avg, Sum
+from django.db.models import Q, Avg
 from django.shortcuts import render, redirect
 from .models import Produto
 from .forms import ProdutoForm
@@ -68,18 +68,18 @@ def dashboard(request):
         da_categoria = produtos.filter(tipo=valor)
         categorias.append({
             'nome': nome,
-            'quantidade': da_categoria.count(),
-            'valor': da_categoria.aggregate(total=Sum('valor'))['total'] or 0,
+            'unidades': sum(p.quantidade for p in da_categoria),
+            'valor': round(sum(p.valor * p.quantidade for p in da_categoria), 2),
         })
-
-    precos = produtos.aggregate(media=Avg('valor'), total=Sum('valor'))
 
     return render(request, 'dashboard.html', {
         'total': produtos.count(),
+        'unidades': sum(p.quantidade for p in produtos),
+        'valor_estoque': sum(p.valor * p.quantidade for p in produtos),
+        'preco_medio': produtos.aggregate(media=Avg('valor'))['media'] or 0,
+        'sem_estoque': produtos.filter(quantidade=0).count(),
+        'repor': produtos.filter(quantidade__lte=5).order_by('quantidade'),
         'categorias': categorias,
-        'precos': precos,
-        'mais_caro': produtos.order_by('-valor').first(),
-        'mais_barato': produtos.order_by('valor').first(),
     })
 
 

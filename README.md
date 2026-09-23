@@ -8,7 +8,8 @@ Projeto Django simples para controle de estoque de produtos. Feito para a prova 
 - **Produtos** (`/produtos`): mostra os produtos em cards, com busca pelo nome e filtro por tipo.
   Cada card tem os botoes + e - para entrada e saida do estoque (o - nao deixa a quantidade ficar negativa),
   e os links de editar e excluir
-- **Dashboard** (`/dashboard`): resumo dos precos e graficos de produtos por categoria
+- **Dashboard** (`/dashboard`): numeros do estoque (unidades, valor em estoque, preco medio, produtos zerados),
+  graficos por categoria e a lista de produtos que precisam de reposicao
 
 ## Telas
 
@@ -35,6 +36,8 @@ produtos/            app principal
   urls.py            rotas
   fixtures/
     produtos.json    produtos de exemplo
+  static/produtos/
+    style.css        o CSS de todas as telas
   templates/
     cadastro.html
     produtos.html
